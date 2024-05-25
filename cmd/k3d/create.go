@@ -190,7 +190,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	viper.WriteConfig()
 
 	// Switch based on git provider, set params
-	var cGitHost, cGitOwner, cGitUser, cGitToken, containerRegistryHost string
+	var cGitHost, cGitOwner, cGitUser, cGitToken, cGitPrefix, containerRegistryHost string
 	var cGitlabOwnerGroupID int
 	switch gitProviderFlag {
 	case "github":
@@ -237,9 +237,15 @@ func runK3d(cmd *cobra.Command, args []string) error {
 			cGitOwner = githubUser
 		}
 		cGitUser = githubUser
+		if os.Getenv("GITHUB_PREFIX") != "" {
+			cGitPrefix = os.Getenv("GITHUB_PREFIX")
+		} else {
+			cGitPrefix = ""
+		}
 
 		viper.Set("flags.github-owner", cGitOwner)
 		viper.Set("github.session_token", cGitToken)
+		viper.Set("github.github_prefix", cGitPrefix)
 		viper.WriteConfig()
 	case "gitlab":
 		if gitlabGroupFlag == "" {
@@ -616,6 +622,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 			// tfEnvs = k3d.GetGithubTerraformEnvs(tfEnvs)
 			tfEnvs["GITHUB_TOKEN"] = cGitToken
 			tfEnvs["GITHUB_OWNER"] = cGitOwner
+			tfEnvs["GITHUB_PREFIX"] = cGitPrefix
 			tfEnvs["TF_VAR_kbot_ssh_public_key"] = viper.GetString("kbot.public-key")
 			tfEnvs["AWS_ACCESS_KEY_ID"] = pkg.MinioDefaultUsername
 			tfEnvs["AWS_SECRET_ACCESS_KEY"] = pkg.MinioDefaultPassword
