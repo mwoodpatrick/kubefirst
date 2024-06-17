@@ -92,6 +92,18 @@ func GetFlags(cmd *cobra.Command, cloudProvider string) (types.CliFlags, error) 
 		return cliFlags, err
 	}
 
+    gitopsRepoNameFlag, err := cmd.Flags().GetString("gitops-repository-name")
+	if err != nil {
+		progress.Error(err.Error())
+		    return cliFlags, err
+	}
+
+	metaphorRepoNameFlag, err := cmd.Flags().GetString("metaphor-repository-name")
+	if err != nil {
+		progress.Error(err.Error())
+		return cliFlags, err
+	}
+
 	useTelemetryFlag, err := cmd.Flags().GetBool("use-telemetry")
 	if err != nil {
 		progress.Error(err.Error())
@@ -185,6 +197,8 @@ func GetFlags(cmd *cobra.Command, cloudProvider string) (types.CliFlags, error) 
 	cliFlags.GithubOrg = githubOrgFlag
 	cliFlags.GitlabGroup = gitlabGroupFlag
 	cliFlags.GitopsTemplateBranch = gitopsTemplateBranchFlag
+    cliFlags.GitopsRepoName = gitopsRepoNameFlag
+	cliFlags.MetaphorRepoName = metaphorRepoNameFlag
 	cliFlags.GitopsTemplateURL = gitopsTemplateURLFlag
 	cliFlags.UseTelemetry = useTelemetryFlag
 	cliFlags.CloudProvider = cloudProvider
@@ -196,6 +210,8 @@ func GetFlags(cmd *cobra.Command, cloudProvider string) (types.CliFlags, error) 
 	viper.Set("flags.cluster-name", cliFlags.ClusterName)
 	viper.Set("flags.dns-provider", cliFlags.DnsProvider)
 	viper.Set("flags.domain-name", cliFlags.DomainName)
+    viper.Set("flags.gitops-repository-name", cliFlags.GitopsRepoName)
+	viper.Set("flags.metaphor-repository-name", cliFlags.MetaphorRepoName)
 	viper.Set("flags.git-provider", cliFlags.GitProvider)
 	viper.Set("flags.git-protocol", cliFlags.GitProtocol)
 	viper.Set("flags.cloud-region", cliFlags.CloudRegion)

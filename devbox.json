@@ -2,6 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.6/.schema/devbox.schema.json",
   "packages": [
     "go@latest",
+    "neovim@latest",
+    "delve@latest",
+    "mkcert@latest",
+    "nss@latest"
   ],
   "shell": {
     "init_hook": [

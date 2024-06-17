@@ -98,6 +98,16 @@ func runK3d(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	gitopsRepoName, err := cmd.Flags().GetString("gitops-repository-name")
+	if err != nil {
+		return err
+	}
+
+	metaphorRepoName, err := cmd.Flags().GetString("metaphor-repository-name")
+	if err != nil {
+		return err
+	}
+    
 	gitopsTemplateURLFlag, err := cmd.Flags().GetString("gitops-template-url")
 	if err != nil {
 		return err
@@ -187,6 +197,8 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	viper.Set("flags.git-provider", gitProviderFlag)
 	viper.Set("flags.git-protocol", gitProtocolFlag)
 	viper.Set("kubefirst.cloud-provider", "k3d")
+    viper.Set("flags.gitops-repository-name", gitopsRepoName)
+    viper.Set("flags.metaphor-repository-name", metaphorRepoName)
 	viper.WriteConfig()
 
 	// Switch based on git provider, set params
@@ -415,7 +427,10 @@ func runK3d(cmd *cobra.Command, args []string) error {
 
 	// Objects to check for
 	// Repositories that will be created throughout the initialization process
-	newRepositoryNames := []string{"gitops", "metaphor"}
+	newRepositoryNames := []string{viper.GetString("flags.gitops-repository-name"), 
+                                   viper.GetString("flags.metaphor-repository-name")}
+    log.Info().Msgf("mlwp: Repo Names: %s %s\n", viper.GetString("flags.gitops-repository-name"),
+                                                 viper.GetString("flags.metaphor-repository-name"))
 	newTeamNames := []string{"admins", "developers"}
 
 	// Check git credentials

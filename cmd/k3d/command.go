@@ -27,6 +27,8 @@ var (
 	gitProviderFlag          string
 	gitProtocolFlag          string
 	gitopsTemplateURLFlag    string
+	gitopsRepoNameFlag       string
+	metaphorRepoNameFlag     string
 	gitopsTemplateBranchFlag string
 	useTelemetryFlag         bool
 	installCatalogApps       string
@@ -39,7 +41,7 @@ var (
 	// Supported git providers
 	supportedGitProviders = []string{"github", "gitlab"}
 
-	// Supported git providers
+	// Supported git protocols
 	supportedGitProtocolOverride = []string{"https", "ssh"}
 )
 
@@ -96,6 +98,8 @@ func Create() *cobra.Command {
 	createCmd.Flags().StringVar(&gitlabGroupFlag, "gitlab-group", "", "the GitLab group for the new gitops and metaphor projects - required if using gitlab")
 	createCmd.Flags().StringVar(&gitopsTemplateBranchFlag, "gitops-template-branch", "", "the branch to clone for the gitops-template repository")
 	createCmd.Flags().StringVar(&gitopsTemplateURLFlag, "gitops-template-url", "https://github.com/kubefirst/gitops-template.git", "the fully qualified url to the gitops-template repository to clone")
+	createCmd.Flags().StringVar(&gitopsRepoNameFlag, "gitops-repository-name", "gitops", "name of gitops repository (eg. github.com/example-org/example-name-of-gitops-repository)")
+	createCmd.Flags().StringVar(&metaphorRepoNameFlag, "metaphor-repository-name", "metaphor", "name of metaphor repository (eg. github.com/example-org/example-name-of-metaphor-repository)")
 	createCmd.Flags().StringVar(&installCatalogApps, "install-catalog-apps", "", "comma seperated values of catalog apps to install after provision")
 	createCmd.Flags().BoolVar(&useTelemetryFlag, "use-telemetry", true, "whether to emit telemetry")
 
