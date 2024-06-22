@@ -26,17 +26,52 @@ import (
 
 func main() {
 	argsWithProg := os.Args
+	configs.ConfigName = "kubefirst"
 
 	bubbleTeaBlacklist := []string{"completion", "help", "--help", "-h", "quota", "logs"}
 	canRunBubbleTea := true
 
-	if argsWithProg != nil {
-		for _, arg := range argsWithProg {
-			isBlackListed := slices.Contains(bubbleTeaBlacklist, arg)
+	homePath, err := os.UserHomeDir()
+	if err != nil {
+		log.Info().Msg(err.Error())
+	}
 
-			if isBlackListed {
-				canRunBubbleTea = false
-			}
+	k1Dir := fmt.Sprintf("%s/.k1", homePath)
+
+	//* create k1Dir if it doesn't exist
+	if _, err := os.Stat(k1Dir); os.IsNotExist(err) {
+		err := os.MkdirAll(k1Dir, os.ModePerm)
+		if err != nil {
+			log.Info().Msgf("%s directory already exists, continuing", k1Dir)
+		}
+	}
+
+	//* create config directory
+	configFolder := fmt.Sprintf("%s/configs", k1Dir)
+	_ = os.Mkdir(configFolder, 0700)
+	if err != nil {
+		log.Fatal().Msgf("error creating config directory: %s", err)
+	}
+
+	//* create log directory
+	logsFolder := fmt.Sprintf("%s/logs", k1Dir)
+	_ = os.Mkdir(logsFolder, 0700)
+	if err != nil {
+		log.Fatal().Msgf("error creating logs directory: %s", err)
+	}
+
+	for i := 1; i < len(argsWithProg); i++ {
+		arg := os.Args[i]
+		isBlackListed := slices.Contains(bubbleTeaBlacklist, arg)
+
+		if isBlackListed {
+			canRunBubbleTea = false
+		}
+
+		// Check if the argument is "--config-name"
+		if arg == "--config-name" && i+1 < len(os.Args) {
+			// Get the value of the config name
+			configs.ConfigName = os.Args[i+1]
 		}
 	}
 
@@ -59,7 +94,7 @@ func main() {
 
 	// use cluster name as filename
 	if isProvision {
-		clusterName := fmt.Sprint(epoch)
+		clusterName := configs.ConfigName
 		for i := 1; i < len(os.Args); i++ {
 			arg := os.Args[i]
 
@@ -72,28 +107,6 @@ func main() {
 		}
 
 		logfileName = fmt.Sprintf("log_%s.log", clusterName)
-	}
-
-	homePath, err := os.UserHomeDir()
-	if err != nil {
-		log.Info().Msg(err.Error())
-	}
-
-	k1Dir := fmt.Sprintf("%s/.k1", homePath)
-
-	//* create k1Dir if it doesn't exist
-	if _, err := os.Stat(k1Dir); os.IsNotExist(err) {
-		err := os.MkdirAll(k1Dir, os.ModePerm)
-		if err != nil {
-			log.Info().Msgf("%s directory already exists, continuing", k1Dir)
-		}
-	}
-
-	//* create log directory
-	logsFolder := fmt.Sprintf("%s/logs", k1Dir)
-	_ = os.Mkdir(logsFolder, 0700)
-	if err != nil {
-		log.Fatal().Msgf("error creating logs directory: %s", err)
 	}
 
 	//* create session log file

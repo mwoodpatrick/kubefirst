@@ -3,7 +3,6 @@ node_modules
 .terraform
 .gitlab-bot-access-token
 .gitlab-runner-registration-token
-.vscode
 terraform-ssh-key
 terraform-ssh-key.pub
 kubeconfig_*

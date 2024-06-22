@@ -5,7 +5,8 @@
     "neovim@latest",
     "delve@latest",
     "mkcert@latest",
-    "nss@latest"
+    "nss@latest",
+    "direnv@latest"
   ],
   "shell": {
     "init_hook": [
