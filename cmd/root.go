@@ -22,11 +22,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Verbose bool
-var Debug bool
-var ConfigName string
-var cfgFile string
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "kubefirst",
@@ -64,11 +59,13 @@ func init() {
 	fmt.Println("In root.go inside init function ahead of calling cobra.OnInitialize(initConfig)")
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Display more verbose output in console output. (default: false)")
+	rootCmd.PersistentFlags().BoolVarP(&common.Verbose, "verbose", "v", false, "Display more verbose output in console output. (default: false)")
 
-	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "d", false, "Display debugging output in the console. (default: false)")
+	rootCmd.PersistentFlags().BoolVarP(&common.Debug, "debug", "d", false, "Display debugging output in the console. (default: false)")
 
-	rootCmd.PersistentFlags().StringVarP(&ConfigName, "config-name", "c", "kubefirst", "Specify config name. (default: kubefirst)")
+	rootCmd.PersistentFlags().StringVarP(&common.ConfigName, "config-name", "c", "kubefirst", "Specify config name. (default: kubefirst)")
+
+	// rootCmd.Flags().StringVar(&ConfigName, "config-name", "kubefirst", "Specify config name. (default: kubefirst)")
 
 	rootCmd.SilenceUsage = true
 	rootCmd.AddCommand(

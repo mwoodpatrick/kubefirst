@@ -1,6 +1,6 @@
 module github.com/kubefirst/kubefirst
 
-go 1.18
+go 1.22.3
 
 require (
 	github.com/argoproj/argo-cd/v2 v2.6.7

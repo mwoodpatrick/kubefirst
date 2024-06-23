@@ -26,6 +26,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	Verbose    bool
+	Debug      bool
+	ConfigName string
+)
+
 type CheckResponse struct {
 	// Current is current latest version on source.
 	Current string

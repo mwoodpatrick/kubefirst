@@ -8,6 +8,8 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	stdLog "log"
 	"os"
 	"time"
@@ -18,6 +20,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/kubefirst/kubefirst/cmd"
+	"github.com/kubefirst/kubefirst/internal/common"
 	"github.com/kubefirst/kubefirst/internal/progress"
 	"github.com/kubefirst/runtime/configs"
 	"github.com/kubefirst/runtime/pkg"
@@ -25,9 +28,6 @@ import (
 )
 
 func main() {
-	argsWithProg := os.Args
-	configs.ConfigName = "kubefirst"
-
 	bubbleTeaBlacklist := []string{"completion", "help", "--help", "-h", "quota", "logs"}
 	canRunBubbleTea := true
 
@@ -60,6 +60,14 @@ func main() {
 		log.Fatal().Msgf("error creating logs directory: %s", err)
 	}
 
+	config := configs.ReadConfig()
+
+	if config.ConfigName != "" {
+		common.ConfigName = config.ConfigName
+	}
+
+	argsWithProg := os.Args
+
 	for i := 1; i < len(argsWithProg); i++ {
 		arg := os.Args[i]
 		isBlackListed := slices.Contains(bubbleTeaBlacklist, arg)
@@ -68,14 +76,23 @@ func main() {
 			canRunBubbleTea = false
 		}
 
-		// Check if the argument is "--config-name"
-		if arg == "--config-name" && i+1 < len(os.Args) {
+		// Check if the argument starts with "--config-name"
+		if arg == "--config-name" {
+			if i+1 < len(os.Args) {
+				common.ConfigName = os.Args[i+1]
+			} else {
+				log.Fatal().Msg("No config name found")
+			}
+		} else if strings.HasPrefix(arg, "--config-name") {
 			// Get the value of the config name
-			configs.ConfigName = os.Args[i+1]
+			parts := strings.Split(arg, "=")
+			common.ConfigName = parts[1]
 		}
 	}
 
-	config := configs.ReadConfig()
+	config.ConfigName = common.ConfigName
+	log.Info().Msg(fmt.Sprintf("Using config: %s", common.ConfigName))
+
 	if err := pkg.SetupViper(config, true); err != nil {
 		stdLog.Panic(err)
 	}
@@ -94,7 +111,7 @@ func main() {
 
 	// use cluster name as filename
 	if isProvision {
-		clusterName := configs.ConfigName
+		clusterName := common.ConfigName
 		for i := 1; i < len(os.Args); i++ {
 			arg := os.Args[i]
 
@@ -103,6 +120,8 @@ func main() {
 				// Get the value of the cluster name
 				clusterName = os.Args[i+1]
 				break
+			} else {
+				log.Fatal().Msg("No cluster name found")
 			}
 		}
 
@@ -139,6 +158,14 @@ func main() {
 	err = viper.WriteConfig()
 	if err != nil {
 		stdLog.Panicf("unable to set log-file-location, error is: %s", err)
+	}
+
+	canRunBubbleTea = common.Debug
+	_, present := os.LookupEnv("KUBEFIRST_DISABLE_BUBBLETEA")
+
+	// disable bubbletea if env var is set, slow in vscode (TODO: need to figure out why)
+	if present {
+		canRunBubbleTea = false
 	}
 
 	if canRunBubbleTea {
