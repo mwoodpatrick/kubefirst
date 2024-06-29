@@ -30,11 +30,45 @@ import (
 func main() {
 	bubbleTeaBlacklist := []string{"completion", "help", "--help", "-h", "quota", "logs"}
 	canRunBubbleTea := true
+	configName := ""
 
 	homePath, err := os.UserHomeDir()
 	if err != nil {
 		log.Info().Msg(err.Error())
 	}
+
+	argsWithProg := os.Args
+
+	for i := 1; i < len(argsWithProg); i++ {
+		arg := os.Args[i]
+		isBlackListed := slices.Contains(bubbleTeaBlacklist, arg)
+
+		if isBlackListed {
+			canRunBubbleTea = false
+		}
+
+		// Check if the argument starts with "--config-name"
+		if arg == "--config-name" {
+			if i+1 < len(os.Args) {
+				configName = os.Args[i+1]
+			} else {
+				log.Fatal().Msg("No config name found")
+			}
+		} else if strings.HasPrefix(arg, "--config-name") {
+			// Get the value of the config name
+			parts := strings.Split(arg, "=")
+			configName = parts[1]
+		}
+	}
+
+	if configName != "" {
+		os.Setenv("CONFIG_NAME", configName)
+	}
+
+	config := configs.ReadConfig()
+
+	common.ConfigName = config.ConfigName
+	log.Info().Msg(fmt.Sprintf("Using config: %s", common.ConfigName))
 
 	k1Dir := fmt.Sprintf("%s/.k1", homePath)
 
@@ -59,39 +93,6 @@ func main() {
 	if err != nil {
 		log.Fatal().Msgf("error creating logs directory: %s", err)
 	}
-
-	config := configs.ReadConfig()
-
-	if config.ConfigName != "" {
-		common.ConfigName = config.ConfigName
-	}
-
-	argsWithProg := os.Args
-
-	for i := 1; i < len(argsWithProg); i++ {
-		arg := os.Args[i]
-		isBlackListed := slices.Contains(bubbleTeaBlacklist, arg)
-
-		if isBlackListed {
-			canRunBubbleTea = false
-		}
-
-		// Check if the argument starts with "--config-name"
-		if arg == "--config-name" {
-			if i+1 < len(os.Args) {
-				common.ConfigName = os.Args[i+1]
-			} else {
-				log.Fatal().Msg("No config name found")
-			}
-		} else if strings.HasPrefix(arg, "--config-name") {
-			// Get the value of the config name
-			parts := strings.Split(arg, "=")
-			common.ConfigName = parts[1]
-		}
-	}
-
-	config.ConfigName = common.ConfigName
-	log.Info().Msg(fmt.Sprintf("Using config: %s", common.ConfigName))
 
 	if err := pkg.SetupViper(config, true); err != nil {
 		stdLog.Panic(err)
