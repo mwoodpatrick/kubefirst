@@ -89,7 +89,7 @@ func Create() *cobra.Command {
 
 	// todo review defaults and update descriptions
 	createCmd.Flags().BoolVar(&ciFlag, "ci", false, "if running kubefirst in ci, set this flag to disable interactive features")
-	createCmd.Flags().StringVar(&clusterNameFlag, "cluster-name", "kubefirst", "the name of the cluster to create")
+	createCmd.Flags().StringVar(&clusterNameFlag, "cluster-name", "", "the name of the cluster to create (defaults to configName)")
 	createCmd.Flags().StringVar(&clusterTypeFlag, "cluster-type", "mgmt", "the type of cluster to create (i.e. mgmt|workload)")
 	createCmd.Flags().StringVar(&gitProviderFlag, "git-provider", "github", fmt.Sprintf("the git provider - one of: %s", supportedGitProviders))
 	createCmd.Flags().StringVar(&gitProtocolFlag, "git-protocol", "ssh", fmt.Sprintf("the git protocol - one of: %s", supportedGitProtocolOverride))
@@ -98,8 +98,8 @@ func Create() *cobra.Command {
 	createCmd.Flags().StringVar(&gitlabGroupFlag, "gitlab-group", "", "the GitLab group for the new gitops and metaphor projects - required if using gitlab")
 	createCmd.Flags().StringVar(&gitopsTemplateBranchFlag, "gitops-template-branch", "", "the branch to clone for the gitops-template repository")
 	createCmd.Flags().StringVar(&gitopsTemplateURLFlag, "gitops-template-url", "https://github.com/kubefirst/gitops-template.git", "the fully qualified url to the gitops-template repository to clone")
-	createCmd.Flags().StringVar(&gitopsRepoNameFlag, "gitops-repository-name", "gitops", "name of gitops repository (eg. github.com/example-org/example-name-of-gitops-repository)")
-	createCmd.Flags().StringVar(&metaphorRepoNameFlag, "metaphor-repository-name", "metaphor", "name of metaphor repository (eg. github.com/example-org/example-name-of-metaphor-repository)")
+	createCmd.Flags().StringVar(&gitopsRepoNameFlag, "gitops-repository-name", "", "name of gitops repository (eg. github.com/example-org/example-name-of-gitops-repository) defaults to clusterName-gitops")
+	createCmd.Flags().StringVar(&metaphorRepoNameFlag, "metaphor-repository-name", "", "name of metaphor repository (eg. github.com/example-org/example-name-of-metaphor-repository) defaults to clusterName-metaphor")
 	createCmd.Flags().StringVar(&installCatalogApps, "install-catalog-apps", "", "comma seperated values of catalog apps to install after provision")
 	createCmd.Flags().BoolVar(&useTelemetryFlag, "use-telemetry", true, "whether to emit telemetry")
 

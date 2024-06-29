@@ -120,8 +120,6 @@ func main() {
 				// Get the value of the cluster name
 				clusterName = os.Args[i+1]
 				break
-			} else {
-				log.Fatal().Msg("No cluster name found")
 			}
 		}
 

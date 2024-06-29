@@ -59,7 +59,7 @@ import (
 
 func runK3d(cmd *cobra.Command, args []string) error {
 	log.Info().Msg(fmt.Sprintf(" In runK3d configName=%s verbose=%t debug=%t\n",
-		common.ConfigName, common.Verbose, common.Debug, common.Debug))
+		common.ConfigName, common.Verbose, common.Debug))
 
 	ciFlag, err := cmd.Flags().GetBool("ci")
 	if err != nil {
@@ -69,6 +69,8 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	clusterNameFlag, err := cmd.Flags().GetString("cluster-name")
 	if err != nil {
 		return err
+	} else if clusterNameFlag == "" {
+		clusterNameFlag = common.ConfigName
 	}
 
 	clusterTypeFlag, err := cmd.Flags().GetString("cluster-type")
@@ -104,11 +106,15 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	gitopsRepoName, err := cmd.Flags().GetString("gitops-repository-name")
 	if err != nil {
 		return err
+	} else if gitopsRepoName == "" {
+		gitopsRepoName = clusterNameFlag + "-gitops"
 	}
 
 	metaphorRepoName, err := cmd.Flags().GetString("metaphor-repository-name")
 	if err != nil {
 		return err
+	} else if metaphorRepoName == "" {
+		metaphorRepoName = clusterNameFlag + "-metaphor"
 	}
 
 	gitopsTemplateURLFlag, err := cmd.Flags().GetString("gitops-template-url")
