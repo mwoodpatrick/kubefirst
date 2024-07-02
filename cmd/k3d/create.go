@@ -201,6 +201,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	}
 
 	// Store flags for application state maintenance
+	viper.Set("flags.config-name", common.ConfigName)
 	viper.Set("flags.cluster-name", clusterNameFlag)
 	viper.Set("flags.domain-name", k3d.DomainName)
 	viper.Set("flags.git-provider", gitProviderFlag)
@@ -349,7 +350,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 	//}
 
 	// Instantiate K3d config
-	config := k3d.GetConfig(clusterNameFlag, gitProviderFlag, cGitOwner, gitProtocolFlag)
+	config := k3d.GetConfig(common.ConfigName, clusterNameFlag, gitopsRepoName, metaphorRepoName, gitProviderFlag, cGitOwner, gitProtocolFlag)
 	switch gitProviderFlag {
 	case "github":
 		config.GithubToken = cGitToken
@@ -560,16 +561,16 @@ func runK3d(cmd *cobra.Command, args []string) error {
 		log.Info().Msgf("generate public keys failed: %s\n", err.Error())
 	}
 
-	//* download dependencies to `$HOME/.k1/tools`
+	//* download dependencies to `$HOME/.k1/configs/<confignme>/tools`
 	if !viper.GetBool("kubefirst-checks.tools-downloaded") {
 		log.Info().Msg("installing kubefirst dependencies")
 
-		err := k3d.DownloadTools(clusterNameFlag, config.GitProvider, cGitOwner, config.ToolsDir, config.GitProtocol)
+		err := k3d.DownloadTools(common.ConfigName, clusterNameFlag, gitopsRepoName, metaphorRepoName, config.GitProvider, cGitOwner, config.ToolsDir, config.GitProtocol)
 		if err != nil {
 			return err
 		}
 
-		log.Info().Msg("download dependencies `$HOME/.k1/tools` complete")
+		log.Info().Msg(fmt.Sprintf("download dependencies `$HOME/.k1/configs/%s/tools` complete", common.ConfigName))
 		viper.Set("kubefirst-checks.tools-downloaded", true)
 		viper.WriteConfig()
 	} else {
@@ -619,6 +620,13 @@ func runK3d(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+
+		pattern := fmt.Sprintf("'s/gitops/%s/'", viper.GetString("flags.gitops-repository-name"))
+		path := fmt.Sprintf("%s/%s", config.GitopsDir, "terraform/github/repos.tf")
+		_, _, err = pkg.ExecShellReturnStrings("sed", "-i", pattern, path)
+
+		pattern = fmt.Sprintf("'s/metaphor/%s/'", viper.GetString("flags.metaphor-repository-name"))
+		_, _, err = pkg.ExecShellReturnStrings("sed", "-i", pattern, path)
 
 		// todo emit init telemetry end
 		viper.Set("kubefirst-checks.gitops-ready-to-push", true)

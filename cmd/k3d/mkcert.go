@@ -37,7 +37,10 @@ func mkCert(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("there doesn't appear to be an active k3d cluster")
 	}
 	config := k3d.GetConfig(
+		viper.GetString("flags.config-name"),
 		viper.GetString("flags.cluster-name"),
+		viper.GetString("flags.gitops-repository-name"),
+		viper.GetString("flags.metaphor-repository-name"),
 		flags.GitProvider,
 		viper.GetString(fmt.Sprintf("flags.%s-owner", flags.GitProvider)),
 		flags.GitProtocol,

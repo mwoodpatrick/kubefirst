@@ -17,6 +17,7 @@ import (
 	"time"
 
 	apiTypes "github.com/kubefirst/kubefirst-api/pkg/types"
+	"github.com/kubefirst/kubefirst/internal/common"
 	"github.com/kubefirst/kubefirst/internal/progress"
 	"github.com/kubefirst/kubefirst/internal/types"
 	"github.com/kubefirst/runtime/configs"
@@ -35,7 +36,7 @@ func CreateK1ClusterDirectory(clusterName string) {
 	if err != nil {
 		log.Info().Msg(err.Error())
 	}
-	k1Dir := fmt.Sprintf("%s/.k1/%s", homePath, clusterName)
+	k1Dir := fmt.Sprintf("%s/.k1/configs/%s", homePath, common.ConfigName)
 	if _, err := os.Stat(k1Dir); os.IsNotExist(err) {
 		err := os.MkdirAll(k1Dir, os.ModePerm)
 		if err != nil {

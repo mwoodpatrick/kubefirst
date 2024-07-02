@@ -80,15 +80,22 @@ func main() {
 		}
 	}
 
+	//* create configs directory
+	configsFolder := fmt.Sprintf("%s/configs", k1Dir)
+	_ = os.Mkdir(configsFolder, 0700)
+	if err != nil {
+		log.Fatal().Msgf("error creating configs directory: %s", err)
+	}
+
 	//* create config directory
-	configFolder := fmt.Sprintf("%s/configs", k1Dir)
+	configFolder := fmt.Sprintf("%s/%s", configsFolder, common.ConfigName)
 	_ = os.Mkdir(configFolder, 0700)
 	if err != nil {
 		log.Fatal().Msgf("error creating config directory: %s", err)
 	}
 
 	//* create log directory
-	logsFolder := fmt.Sprintf("%s/logs", k1Dir)
+	logsFolder := fmt.Sprintf("%s/logs", configFolder)
 	_ = os.Mkdir(logsFolder, 0700)
 	if err != nil {
 		log.Fatal().Msgf("error creating logs directory: %s", err)

@@ -55,7 +55,7 @@ func getK3dRootCredentials(cmd *cobra.Command, args []string) error {
 	}
 
 	// Instantiate kubernetes client
-	config := k3d.GetConfig(clusterName, gitProvider, gitOwner, gitProtocol)
+	config := k3d.GetConfig(viper.GetString("flags.config-name"), clusterName, viper.GetString("flags.gitops-repository-name"), viper.GetString("flags.metaphor-repository-name"), gitProvider, gitOwner, gitProtocol)
 
 	kcfg := k8s.CreateKubeConfig(false, config.Kubeconfig)
 

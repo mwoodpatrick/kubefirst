@@ -68,7 +68,7 @@ func destroyK3d(cmd *cobra.Command, args []string) error {
 	}
 
 	// Instantiate K3d config
-	config := k3d.GetConfig(clusterName, gitProvider, cGitOwner, gitProtocol)
+	config := k3d.GetConfig(viper.GetString("flags.config-name"), clusterName, viper.GetString("flags.gitops-repository-name"), viper.GetString("flags.metaphor-repository-name"), viper.GetString("gitProvider"), cGitOwner, gitProtocol)
 	switch gitProvider {
 	case "github":
 		config.GithubToken = cGitToken
