@@ -6,7 +6,9 @@
     "delve@latest",
     "mkcert@latest",
     "nss@latest",
-    "direnv@latest"
+    "direnv@latest",
+    "git@2.45.1",
+    "gh@2.52.0"
   ],
   "shell": {
     "init_hook": [
