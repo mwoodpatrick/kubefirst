@@ -13,7 +13,6 @@ dist/
 **/.DS_Store
 /git
 bin
-.vscode/settings.json
 logs/
 /tmp
 lint_log.txt
@@ -27,4 +26,3 @@ kubefirst.yaml
 
 __debug_*
 kubefirst
-launch.json
