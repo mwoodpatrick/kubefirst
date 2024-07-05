@@ -609,24 +609,19 @@ func runK3d(cmd *cobra.Command, args []string) error {
 			config.GitopsDir,
 			gitopsTemplateBranchFlag,
 			gitopsTemplateURLFlag,
+			gitopsRepoName,
 			config.DestinationMetaphorRepoURL, //default to https for git interactions when creating remotes
 			config.K1Dir,
 			&gitopsDirectoryTokens,
 			config.MetaphorDir,
 			&metaphorTemplateTokens,
+			metaphorRepoName,
 			gitProtocolFlag,
 			removeAtlantis,
 		)
 		if err != nil {
 			return err
 		}
-
-		pattern := fmt.Sprintf("'s/gitops/%s/'", viper.GetString("flags.gitops-repository-name"))
-		path := fmt.Sprintf("%s/%s", config.GitopsDir, "terraform/github/repos.tf")
-		_, _, err = pkg.ExecShellReturnStrings("sed", "-i", pattern, path)
-
-		pattern = fmt.Sprintf("'s/metaphor/%s/'", viper.GetString("flags.metaphor-repository-name"))
-		_, _, err = pkg.ExecShellReturnStrings("sed", "-i", pattern, path)
 
 		// todo emit init telemetry end
 		viper.Set("kubefirst-checks.gitops-ready-to-push", true)
