@@ -31,8 +31,8 @@ import (
 	"github.com/kubefirst/kubefirst/internal/catalog"
 	"github.com/kubefirst/kubefirst/internal/common"
 	"github.com/kubefirst/kubefirst/internal/gitShim"
-	"github.com/kubefirst/kubefirst/internal/segment"
 	"github.com/kubefirst/kubefirst/internal/progress"
+	"github.com/kubefirst/kubefirst/internal/segment"
 	"github.com/kubefirst/kubefirst/internal/utilities"
 	"github.com/kubefirst/metrics-client/pkg/telemetry"
 	"github.com/kubefirst/runtime/configs"
@@ -54,9 +54,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// var (
-// 	cancelContext context.CancelFunc
-// )
+var (
+	cancelContext context.CancelFunc
+)
 
 func runK3d(cmd *cobra.Command, args []string) error {
 	log.Info().Msg(fmt.Sprintf(" In runK3d configName=%s verbose=%t debug=%t\n",
@@ -191,7 +191,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 
 	// Global context
 	var ctx context.Context
-	// ctx, cancelContext = context.WithCancel(context.Background())
+	ctx, cancelContext = context.WithCancel(context.Background())
 
 	// Clients
 	httpClient := http.DefaultClient

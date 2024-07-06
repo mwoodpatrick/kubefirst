@@ -1,0 +1,13 @@
+# Automatically sets up your devbox environment whenever you cd into this
+# directory via our direnv integration:
+
+eval "$(devbox generate direnv --print-envrc)"
+export CGO_CFLAGS="-g" # Needed to build kubefirst (TODO: need to investigate further)
+export GITHUB_TOKEN="" # set this to GitHubToken
+export GITHUB_PREFIX=test1 # TODO: remove this
+export CONFIG_NAME=notheconfigname
+export CONFIG_NAME="kubefirst-test2"
+export KUBEFIRST_DISABLE_BUBBLETEA=1 # causes vscode to run very slowly (TODO: figure out why)
+
+# check out https://www.jetpack.io/devbox/docs/ide_configuration/direnv/
+# for more details

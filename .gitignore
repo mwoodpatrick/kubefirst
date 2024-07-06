@@ -1,4 +1,7 @@
+debugtf
 *.env
+*.log
+.envrc
 node_modules
 .terraform
 .gitlab-bot-access-token
