@@ -64,8 +64,6 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&common.ConfigName, "config-name", "c", "kubefirst", "Specify config name. (default: kubefirst)")
 
-	// rootCmd.Flags().StringVar(&ConfigName, "config-name", "kubefirst", "Specify config name. (default: kubefirst)")
-
 	rootCmd.SilenceUsage = true
 	rootCmd.AddCommand(
 		betaCmd,

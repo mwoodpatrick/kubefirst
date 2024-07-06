@@ -9,12 +9,12 @@ package k3d
 import (
 	"fmt"
 	"io"
-	"os"
 	"strings"
-	"github.com/kubefirst/kubefirst/internal/progress"
+
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/kubefirst/kubefirst/internal/progress"
 )
 
 const ListHeight = 14
