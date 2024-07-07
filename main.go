@@ -166,14 +166,6 @@ func main() {
 		stdLog.Panicf("unable to set log-file-location, error is: %s", err)
 	}
 
-	canRunBubbleTea = common.Debug
-	// _, present := os.LookupEnv("KUBEFIRST_DISABLE_BUBBLETEA")
-
-	// disable bubbletea if env var is set, slow in vscode (TODO: need to figure out why)
-	// if present {
-	//	canRunBubbleTea = false
-	//}
-
 	if canRunBubbleTea {
 		progress.InitializeProgressTerminal()
 
