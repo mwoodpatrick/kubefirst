@@ -1326,7 +1326,7 @@ func runK3d(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		log.Info().Msg("executed users terraform successfully")
-		progressPrinter.IncrementTracker("step-users", 1)
+		// progressPrinter.IncrementTracker("step-users", 1)
 		viper.Set("kubefirst-checks.terraform-apply-users", true)
 		viper.WriteConfig()
 		telemetry.SendEvent(segClient, telemetry.UsersTerraformApplyCompleted, "")

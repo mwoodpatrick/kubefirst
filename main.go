@@ -167,12 +167,12 @@ func main() {
 	}
 
 	canRunBubbleTea = common.Debug
-	_, present := os.LookupEnv("KUBEFIRST_DISABLE_BUBBLETEA")
+	// _, present := os.LookupEnv("KUBEFIRST_DISABLE_BUBBLETEA")
 
 	// disable bubbletea if env var is set, slow in vscode (TODO: need to figure out why)
-	if present {
-		canRunBubbleTea = false
-	}
+	// if present {
+	//	canRunBubbleTea = false
+	//}
 
 	if canRunBubbleTea {
 		progress.InitializeProgressTerminal()
