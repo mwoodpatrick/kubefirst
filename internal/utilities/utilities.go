@@ -16,12 +16,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/kubefirst/kubefirst-api/pkg/configs"
+	"github.com/kubefirst/kubefirst-api/pkg/k8s"
 	apiTypes "github.com/kubefirst/kubefirst-api/pkg/types"
 	"github.com/kubefirst/kubefirst/internal/common"
 	"github.com/kubefirst/kubefirst/internal/progress"
 	"github.com/kubefirst/kubefirst/internal/types"
-	"github.com/kubefirst/runtime/configs"
-	"github.com/kubefirst/runtime/pkg/k8s"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -164,6 +164,7 @@ func CreateClusterDefinitionRecordFromRaw(gitAuth apiTypes.GitAuth, cliFlags typ
 		DnsProvider:            viper.GetString("flags.dns-provider"),
 		LogFileName:            viper.GetString("k1-paths.log-file-name"),
 		PostInstallCatalogApps: catalogApps,
+		InstallKubefirstPro:    cliFlags.InstallKubefirstPro,
 		GitAuth: apiTypes.GitAuth{
 			Token:      gitAuth.Token,
 			User:       gitAuth.User,
